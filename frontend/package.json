@@ -1,0 +1,8 @@
+{
+  "name": "mypharmafrontend",
+  "version": "0.0.1",
+  "description": "React app for MyPharma project",
+  "main": "index.js",
+  "author": "Bruno Garcia Moura",
+  "license": "MIT"
+}
