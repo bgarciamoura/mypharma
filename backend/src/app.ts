@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { db_config } from '../mongoose.config';
 
+import { authRoutes } from './routes/auth.routes';
 import { brandsRoutes } from './routes/brands.routes';
 
 const app = express();
@@ -12,6 +13,7 @@ const PORT = 3333;
 
 db_config;
 
+app.use('/api/v1', authRoutes);
 app.use('/api/v1', brandsRoutes);
 
 app.listen(PORT, () => {
