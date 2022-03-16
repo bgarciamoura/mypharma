@@ -75,19 +75,13 @@ brandsRoutes.get('/brands', async (req, res) => {
 brandsRoutes.get('/brands/:name', async (req, res) => {
     const { name } = req.params;
 
+    if (!name) {
+        return res.status(400).json({ message: 'Please, provide the name for search!' });
+    }
+
     try {
-        if (name) {
-            const brands = await Brands.find({ name });
-            return res.status(200).json(brands);
-        }
-
-        const brands = await Brands.find({ name });
-
-        if (!brands || brands.length === 0) {
-            return res.status(404).json({ message: 'Brand not found' });
-        }
-
-        res.status(200).json(brands);
+        const brands = await Brands.find({ name: { $regex: '.*' + name + '.*' } });
+        return res.status(200).json(brands);
     } catch (error) {
         console.log('ERROR ON GET', error);
         res.status(500).json({ message: 'Failed to get brand' });
