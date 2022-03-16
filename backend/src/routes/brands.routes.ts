@@ -1,10 +1,11 @@
 import express from 'express';
 import { Brands } from '../models/Brands';
 import { uuid } from 'uuidv4';
+import { verifyToken } from '../middlewares/verifyToken';
 
 const brandsRoutes = express.Router();
 
-brandsRoutes.post('/brands', async (req, res) => {
+brandsRoutes.post('/brands', verifyToken, async (req, res) => {
     try {
         const { name } = req.body;
         const UUID = uuid();
@@ -23,7 +24,7 @@ brandsRoutes.post('/brands', async (req, res) => {
     }
 });
 
-brandsRoutes.delete('/brands/:id', async (req, res) => {
+brandsRoutes.delete('/brands/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -42,7 +43,7 @@ brandsRoutes.delete('/brands/:id', async (req, res) => {
     }
 });
 
-brandsRoutes.put('/brands/:id', async (req, res) => {
+brandsRoutes.put('/brands/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
 
@@ -62,7 +63,7 @@ brandsRoutes.put('/brands/:id', async (req, res) => {
     }
 });
 
-brandsRoutes.get('/brands', async (req, res) => {
+brandsRoutes.get('/brands', verifyToken, async (req, res) => {
     try {
         const brands = await Brands.find();
         res.status(200).json(brands);
@@ -72,7 +73,7 @@ brandsRoutes.get('/brands', async (req, res) => {
     }
 });
 
-brandsRoutes.get('/brands/:name', async (req, res) => {
+brandsRoutes.get('/brands/:name', verifyToken, async (req, res) => {
     const { name } = req.params;
 
     if (!name) {
