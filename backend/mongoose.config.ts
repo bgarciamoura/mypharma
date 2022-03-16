@@ -4,10 +4,11 @@ const db_config = mongoose.connect(
     'mongodb://host.docker.internal:27017/task-management',
     {
         auth: {
-            username: 'anas',
-            password: '12345',
+            username: 'bg',
+            password: '123456',
         },
         authSource: 'admin',
+        dbName: 'mypharma',
     },
     (err) => {
         if (err) {
