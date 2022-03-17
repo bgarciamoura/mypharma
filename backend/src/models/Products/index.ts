@@ -26,17 +26,13 @@ const ProductsSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    category: {
-        type: String,
+    categories: {
+        type: [Object],
         required: true,
-        trim: true,
-        lowercase: true,
     },
-    brand: {
-        type: String,
+    brands: {
+        type: [Object],
         required: true,
-        trim: true,
-        lowercase: true,
     },
     createdAt: {
         type: Date,

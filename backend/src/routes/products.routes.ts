@@ -2,29 +2,33 @@ import express from 'express';
 import { uuid } from 'uuidv4';
 import { Products } from '../models/Products';
 import { verifyToken } from '../middlewares/verifyToken';
+import { Brands } from '../models/Brands';
 
-const productRoutes = express.Router();
+const productsRoutes = express.Router();
 
-productRoutes.post('/products', verifyToken, async (req, res) => {
+productsRoutes.post('/products', verifyToken, async (req, res) => {
+    const { name, description, price, stock, categories, brands } = req.body;
+
+    const newProduct = new Products({
+        UUID: uuid(),
+        name,
+        description,
+        price,
+        stock,
+        categories,
+        brands,
+    });
+
     try {
-        const { name, brand, price, description } = req.body;
-        const UUID = uuid();
-
-        const existsProduct = await Products.findOne({ name });
-
-        if (existsProduct) {
-            return res.status(400).send({ error: 'Product already exists' });
-        }
-
-        const products = await Products.create({ UUID, name, brand, price, description });
-        res.status(201).json(products);
+        const savedProduct = await newProduct.save();
+        res.status(201).json(savedProduct);
     } catch (error) {
         console.log('ERROR ON CREATE', error);
-        res.status(500).json({ message: 'Failed to create product' });
+        res.status(400).json({ message: error });
     }
 });
 
-productRoutes.delete('/products/:id', verifyToken, async (req, res) => {
+productsRoutes.delete('/products/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -43,9 +47,9 @@ productRoutes.delete('/products/:id', verifyToken, async (req, res) => {
     }
 });
 
-productRoutes.put('/products/:id', verifyToken, async (req, res) => {
+productsRoutes.put('/products/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
-    const { name, brand, price, description } = req.body;
+    const { name, description, price, stock, categories, brands } = req.body;
 
     try {
         const product = await Products.findOne({ UUID: id });
@@ -56,18 +60,18 @@ productRoutes.put('/products/:id', verifyToken, async (req, res) => {
 
         const updatedProduct = await Products.findOneAndUpdate(
             { UUID: id },
-            { name, brand, price, description },
+            { name, description, price, stock, categories, brands },
             { new: true }
         );
 
         res.status(200).json(updatedProduct);
     } catch (error) {
-        console.log('ERROR ON DELETE', error);
-        res.status(500).json({ message: 'Failed to delete product' });
+        console.log('ERROR ON UPDATE', error);
+        res.status(500).json({ message: 'Failed to update the product' });
     }
 });
 
-productRoutes.get('/products', verifyToken, async (req, res) => {
+productsRoutes.get('/products', verifyToken, async (req, res) => {
     try {
         const products = await Products.find();
         res.status(200).json(products);
@@ -77,7 +81,7 @@ productRoutes.get('/products', verifyToken, async (req, res) => {
     }
 });
 
-productRoutes.get('/products/:name', verifyToken, async (req, res) => {
+productsRoutes.get('/products/:name', verifyToken, async (req, res) => {
     const { name } = req.params;
 
     try {
@@ -93,3 +97,5 @@ productRoutes.get('/products/:name', verifyToken, async (req, res) => {
         res.status(500).json({ message: 'Failed to get product' });
     }
 });
+
+export { productsRoutes };
