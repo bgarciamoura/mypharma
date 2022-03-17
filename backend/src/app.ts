@@ -4,6 +4,7 @@ import { db_config } from '../mongoose.config';
 
 import { authRoutes } from './routes/auth.routes';
 import { brandsRoutes } from './routes/brands.routes';
+import { categoriesRoutes } from './routes/categories.routes';
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,7 @@ db_config;
 
 app.use('/api/v1', authRoutes);
 app.use('/api/v1', brandsRoutes);
+app.use('/api/v1', categoriesRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server listening on port: ${PORT}`);
